@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from employees.views import UserSignUpView
+from employees.views import UserSignUpView, EmployeeCreateListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', UserSignUpView.as_view()),
+    path('employee/', EmployeeCreateListView.as_view()),
 ]

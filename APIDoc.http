@@ -4,7 +4,7 @@ POST http://127.0.0.1:8000/register/
 Content-Type: application/json
 
 {
-    "username":"user4",
+    "username":"user5",
     "password":"user123",
     "email":"user@gmail.com"
 }
@@ -14,21 +14,32 @@ Content-Type: application/json
 ###
 POST http://127.0.0.1:8000/employee/
 Content-Type: application/json
-Authorization: Basic user:user123
+Authorization:Basic user5:user123
 
 {
-    "name": "Alice Thompson",
-    "department": "Engineering",
-    "designation": "Senior Backend Developer",
-    "salary": 95000,
-    "email": "alice.t@company.com",
-    "date_of_joining": "2023-03-15"
-}
+    "name": "James Wilson",
+    "department": "Finance",
+    "designation": "Financial Analyst",
+    "salary": 80000,
+    "email": "j.wilson@company.com",
+    "date_of_joining": "2023-05-22"
+  }
 
 
 # api call for list employees
 ###
 GET http://127.0.0.1:8000/employee/
 Accept: application/json
-Content-Type: application/json
-Authorization: Basic user:user123
+Authorization: Basic user3:user123
+
+
+
+# api call for get specific employee
+###
+GET http://127.0.0.1:8000/employee/4/
+Accept: application/json
+Authorization: Basic user3:user123
+
+
+
+# api call for 
