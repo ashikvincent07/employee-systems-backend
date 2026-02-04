@@ -3,7 +3,7 @@
 A small HTTP API for user registration and basic employee CRUD operations.
 
 Quick links
-- API documentation: see [API_DOCS.md](API_DOCS.md)
+- API documentation: see [APIDoc.http](APIDoc.http)
 
 Getting started (local)
 1. Start your web server (example):
