@@ -1,0 +1,319 @@
+openapi: 3.0.3
+info:
+  title: Employee Management API
+  version: "1.0.0"
+  description: |
+    HTTP API for user registration and basic employee CRUD operations.
+    Local base server shown in `servers`. Employee endpoints require HTTP Basic Authentication.
+servers:
+  - url: http://127.0.0.1:8000
+paths:
+  /register/:
+    post:
+      summary: Register a new user
+      description: Create a new user account (used for subsequent Basic Auth).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+            example:
+              username: "user5"
+              password: "user123"
+              email: "user@gmail.com"
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                id: 7
+                username: "user5"
+                email: "user@gmail.com"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /employee/:
+    get:
+      summary: List employees
+      description: Retrieve a list of employees. Requires Basic Auth.
+      security:
+        - basicAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Array of employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+              example:
+                - id: 1
+                  name: "Alice Smith"
+                  department: "Engineering"
+                  designation: "Backend Engineer"
+                  salary: 95000
+                  email: "alice@company.com"
+                  date_of_joining: "2022-03-10"
+                - id: 2
+                  name: "James Wilson"
+                  department: "Finance"
+                  designation: "Financial Analyst"
+                  salary: 80000
+                  email: "j.wilson@company.com"
+                  date_of_joining: "2023-05-22"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Create an employee
+      description: Create a new employee record. Requires Basic Auth.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeCreate'
+            example:
+              name: "James Wilson"
+              department: "Finance"
+              designation: "Financial Analyst"
+              salary: 80000
+              email: "j.wilson@company.com"
+              date_of_joining: "2023-05-22"
+      responses:
+        '201':
+          description: Employee created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              example:
+                id: 12
+                name: "James Wilson"
+                department: "Finance"
+                designation: "Financial Analyst"
+                salary: 80000
+                email: "j.wilson@company.com"
+                date_of_joining: "2023-05-22"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /employee/{id}/:
+    parameters:
+      - name: id
+        in: path
+        description: Employee ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get employee by ID
+      description: Retrieve a single employee by ID. Requires Basic Auth.
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Employee object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              example:
+                id: 2
+                name: "James Wilson"
+                department: "Finance"
+                designation: "Financial Analyst"
+                salary: 80000
+                email: "j.wilson@company.com"
+                date_of_joining: "2023-05-22"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Replace an employee
+      description: Replace an employee record. All fields should be provided. Requires Basic Auth.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeCreate'
+            example:
+              name: "David Rodriguez Jose"
+              department: "Engineering"
+              designation: "Cloud Engineer"
+              salary: 105000
+              email: "david.r@company.com"
+              date_of_joining: "2023-06-20"
+      responses:
+        '200':
+          description: Updated employee object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete an employee
+      description: Delete an employee. Requires Basic Auth.
+      security:
+        - basicAuth: []
+      responses:
+        '204':
+          description: No Content — employee deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    UserRegister:
+      type: object
+      required:
+        - username
+        - password
+        - email
+      properties:
+        username:
+          type: string
+          example: "user5"
+        password:
+          type: string
+          format: password
+          example: "user123"
+        email:
+          type: string
+          format: email
+          example: "user@gmail.com"
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 7
+        username:
+          type: string
+          example: "user5"
+        email:
+          type: string
+          format: email
+          example: "user@gmail.com"
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: "James Wilson"
+        department:
+          type: string
+          example: "Finance"
+        designation:
+          type: string
+          example: "Financial Analyst"
+        salary:
+          type: number
+          format: float
+          example: 80000
+        email:
+          type: string
+          format: email
+          example: "j.wilson@company.com"
+        date_of_joining:
+          type: string
+          format: date
+          example: "2023-05-22"
+      required:
+        - id
+        - name
+        - department
+        - designation
+        - salary
+        - email
+        - date_of_joining
+    EmployeeCreate:
+      type: object
+      required:
+        - name
+        - department
+        - designation
+        - salary
+        - email
+        - date_of_joining
+      properties:
+        name:
+          type: string
+          example: "James Wilson"
+        department:
+          type: string
+          example: "Finance"
+        designation:
+          type: string
+          example: "Financial Analyst"
+        salary:
+          type: number
+          format: float
+          minimum: 0
+          example: 80000
+        email:
+          type: string
+          format: email
+          example: "j.wilson@company.com"
+        date_of_joining:
+          type: string
+          format: date
+          example: "2023-05-22"
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: "Validation error or authentication failed"
+  responses:
+    BadRequest:
+      description: Bad Request — validation errors
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: "Missing required field: name"
+    Unauthorized:
+      description: Unauthorized — authentication missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: "Authentication credentials were not provided or are invalid."
+    NotFound:
+      description: Not Found — resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: "Employee with id=4 not found."

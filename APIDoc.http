@@ -36,7 +36,7 @@ Authorization: Basic user3:user123
 
 # api call for get specific employee
 ###
-GET http://127.0.0.1:8000/employee/4/
+GET http://127.0.0.1:8000/employee/2/
 Accept: application/json
 Authorization: Basic user3:user123
 
